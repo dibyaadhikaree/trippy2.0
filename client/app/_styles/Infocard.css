@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap');
+
+body {
+  font-family: 'Josefin Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.post-card {
+  width: 400px;
+  border-radius: 16px;
+  background-color: rgb(198, 153, 99);
+  box-shadow: 0 4px 8px rgba(27, 38, 49, 0.1),
+              0 8px 16px rgba(27, 38, 49, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.post-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 6px 12px rgba(27, 38, 49, 0.15),
+              0 12px 24px rgba(27, 38, 49, 0.1);
+}
+
+.post-image-container {
+  position: relative;
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+}
+
+.post-image {
+  width: 100%;
+  display: block;
+  transition: transform 0.5s;
+}
+
+.post-image-container:hover .post-image {
+  transform: scale(1.05);
+}
+
+.like-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 32px;
+  color: #fff;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.3s, color 0.5s;
+  z-index: 10;
+}
+
+.like-button:hover {
+  transform: scale(1.2);
+  z-index: 20;
+}
+
+.post-content {
+  padding: 16px;
+}
+
+.caption {
+  margin: 0;
+  font-size: 16px;
+  color: rgb(27, 38, 49);
+  line-height: 1.5;
+}
+
+.location {
+  margin: 8px 0 0 0;
+  font-size: 14px;
+  color: rgb(27, 38, 49);
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "name": "kathmandu",
+    "lat": 27.70169,
+    "lon": 85.3206,
+    "population": 1442271
+  },
+  {
+    "name": "pokhara",
+    "lat": 28.26689,
+    "lon": 83.96851,
+    "population": 200000
+  },
+  {
+    "name": "Lalitpur",
+    "lat": 27.54827,
+    "lon": 85.3237,
+    "population": null
+  },
+  {
+    "name": "Bhaktapur",
+    "lat": 27.67426,
+    "lon": 85.42647,
+    "population": null
+  },
+  {
+    "name": "Dharan",
+    "lat": 26.79584,
+    "lon": 87.28044,
+    "population": null
+  },
+  {
+    "name": "Bharatpur",
+    "lat": 27.68737,
+    "lon": 84.43606,
+    "population": null
+  },
+  {
+    "name": "Biratnagar",
+    "lat": 26.44202,
+    "lon": 87.27613,
+    "population": null
+  },
+  {
+    "name": "hetauda",
+    "lat": 27.42839,
+    "lon": 85.03219,
+    "population": 84775
+  },
+  {
+    "name": "Janakpur",
+    "lat": 26.72819,
+    "lon": 85.93914,
+    "population": null
+  },
+  {
+    "name": "lumbini",
+    "lat": 27.45573,
+    "lon": 83.24983,
+    "population": null
+  },
+  {
+    "name": "Chitwan",
+    "lat": 27.61796,
+    "lon": 84.45318,
+    "population": null
+  },
+  {
+    "name": "Ilam",
+    "lat": 26.88547,
+    "lon": 87.92035,
+    "population": null
+  },
+  {
+    "name": "Bandipur",
+    "lat": 27.9186,
+    "lon": 84.3942,
+    "population": null
+  },
+  {
+    "name": "Ghandruk",
+    "lat": 28.39233,
+    "lon": 83.80709,
+    "population": null
+  },
+  {
+    "name": "Nagarkot",
+    "lat": 27.71522,
+    "lon": 85.52075,
+    "population": 4000
+  },
+  {
+    "name": "Rara",
+    "lat": 29.54909,
+    "lon": 82.0732,
+    "population": null
+  },
+  {
+    "name": "Mustang",
+    "lat": 28.9479,
+    "lon": 83.90062,
+    "population": null
+  },
+  {
+    "name": "Manang",
+    "lat": 28.66418,
+    "lon": 84.02214,
+    "population": null
+  },
+  {
+    "name": "Dolpa",
+    "lat": 29.21419,
+    "lon": 83.03685,
+    "population": null
+  },
+  {
+    "name": "Tansen",
+    "lat": 27.86735,
+    "lon": 83.532,
+    "population": null
+  },
+  {
+    "name": "Kalinchowk",
+    "lat": 27.78735,
+    "lon": 86.06478,
+    "population": null
+  },
+  {
+    "name": "Pathara",
+    "lat": 26.82572,
+    "lon": 85.99683,
+    "population": null
+  }
+]

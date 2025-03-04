@@ -1,0 +1,10 @@
+[
+  {
+    "id": 1,
+    "name": "Pranjal Acharya",
+    "email": "pranjalachr@gmail.com",
+    "password": "123456",
+    "role": "user",
+    "preferences": ["natures", "temple", "adventure"]
+  }
+]
