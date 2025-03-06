@@ -1,6 +1,10 @@
 // import { notFound } from "next/navigation";
 "use server";
+import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { authConfig } from "./auth";
+import { redirect } from "next/dist/server/api-utils";
 
 const baseUrl = "http://localhost:2000/api/";
 
@@ -168,12 +172,24 @@ export async function getReviewsForPlace(id) {
   return data;
 }
 export async function createReview(id, formData) {
+  const session = await getServerSession(authConfig);
+
   const res = await fetch(baseUrl + `places/${id}/reviews`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
+    body: JSON.stringify({ ...formData, user: session.user.userId }),
   });
   const data = await res.json();
+
+  revalidatePath("/places/" + id);
+  revalidatePath("/account/likedPlaces");
+
+  return data;
+}
+export async function deleteReview(id) {
+  const res = await fetch(baseUrl + `reviews/${id}`, {
+    method: "DELETE",
+  });
 
   return data;
 }

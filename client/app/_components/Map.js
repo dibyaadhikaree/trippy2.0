@@ -13,7 +13,7 @@ export default function Map({ latitude, longitude }) {
   );
 
   return (
-    <div className="border-[2px] border-primary-300">
+    <div className="flex align-baseline mx-4">
       <Map latitude={latitude} longitude={longitude} />
     </div>
   );

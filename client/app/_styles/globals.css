@@ -36,3 +36,23 @@
   --rdp-background-color: theme("colors.accent.600") !important;
   margin: 0 !important;
 }
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: theme("colors.primary.950");
+  border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: theme("colors.primary.800");
+  border-radius: 24px;
+}
+/* To handle height for vertical scrollbar, you can control the thumb height */
+::-webkit-scrollbar-thumb {
+  max-height: 200px; /* Minimum height of the thumb handle */
+}

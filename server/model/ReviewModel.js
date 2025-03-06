@@ -5,6 +5,11 @@ const reviewSchema = new mongoose.Schema({
   text: String,
   timestamp: Date,
   sentiment_score: Number,
+  rate: Number,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 module.exports = mongoose.model("Review", reviewSchema);

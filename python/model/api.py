@@ -23,10 +23,11 @@ class RefreshSchema(Schema):
 def get_recommendations():
     try:
         data = RecommendSchema().load(request.get_json())
+        print(data)
         recs = recommender.recommend(data['_id'], data['top_n'])
         return jsonify({'recommendations': recs})
     except ValidationError as e:
-        return jsonify({'error': e.messages}), 400
+        return jsonify({'error': e.messages , 'mess' : "problener here"}), 400
 
 @app.route('/popular', methods=['GET'])
 def get_popular():

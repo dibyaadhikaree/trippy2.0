@@ -13,10 +13,20 @@ const usersSchema = new mongoose.Schema({
   likedPlaces: [
     {
       type: String,
-      ref: "",
+      ref: "Place",
     },
   ],
 });
+
+usersSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "user",
+  localField: "_id",
+});
+
+// Make sure to set the schema option `toObject` and `toJSON` to `{ virtuals: true }` so it includes virtuals when you convert a document to JSON
+usersSchema.set("toJSON", { virtuals: true });
+usersSchema.set("toObject", { virtuals: true });
 
 const User = mongoose.model("User", usersSchema);
 

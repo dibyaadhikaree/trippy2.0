@@ -6,6 +6,7 @@ function TextExpander({ children }) {
     ? children
     : children.split(" ").slice(0, 40).join(" ") + "...";
 
+  if (children.split(" ").length < 40) return children;
   return (
     <span>
       {displayText}{" "}

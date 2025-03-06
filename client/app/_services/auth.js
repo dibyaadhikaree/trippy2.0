@@ -52,6 +52,7 @@ const authConfig = {
       if (currentUser) {
         session.user.userId = currentUser._id;
         session.user.preferences = currentUser.preferences;
+        session.user.likedPlaces = currentUser.likedPlaces;
       }
       return session;
     },

@@ -11,6 +11,7 @@ exports.getUserFromEmail = async (req, res, next) => {
     res.status(200).json({
       status: "success",
       data,
+      rev: data.reviews,
     });
   } catch (err) {
     res.status(200).json({

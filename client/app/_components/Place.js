@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import TextExpander from "@/app/_components/TextExpander";
 import {
@@ -7,12 +9,14 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/solid";
 import bgImage from "../../public/bg.png";
-import Map from "./Map";
+import React, { useState } from "react";
+import { HeartIcon } from "@heroicons/react/solid"; // Ensure you have @heroicons/react
+import { HeartIcon as HeartOutline } from "@heroicons/react/outline"; // For the outlined heart
 
 function capitalizeFirstLetter(val) {
   return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 }
-function Place({ place }) {
+function Place({ place, liked: isLiked }) {
   const {
     _id: id,
     name,
@@ -23,7 +27,15 @@ function Place({ place }) {
     longitude,
   } = place;
 
-  console.log(image, "in page");
+  // State to manage whether the place is liked
+  const [liked, setLiked] = useState(isLiked);
+
+  // Toggle the liked state
+  const toggleLike = () => {
+    setLiked(!liked);
+    // Here, you might also want to call an API to update the backend
+    updateLikeStatus(id, !liked);
+  };
 
   return (
     <div className="grid grid-cols-[3fr_4fr] gap-20 border border-primary-800 py-3 px-10 mb-24 ">
