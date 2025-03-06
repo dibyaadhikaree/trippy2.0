@@ -1,5 +1,7 @@
 const User = require("../model/UsersModel");
 
+const catchAsync = require("../utils/catchAsyncErrors");
+
 exports.getUserFromEmail = async (req, res, next) => {
   try {
     const email = req.params.email;
@@ -17,6 +19,15 @@ exports.getUserFromEmail = async (req, res, next) => {
     });
   }
 };
+exports.getAllUsers = async (req, res, next) => {
+  const data = await User.find();
+
+  res.status(200).json({
+    status: "success",
+    data,
+  });
+};
+
 exports.createUser = async (req, res, next) => {
   try {
     const user = req.body;
