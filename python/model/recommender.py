@@ -1,8 +1,10 @@
 import numpy as np
 import logging
+from collections import defaultdict
 from sklearn.preprocessing import MultiLabelBinarizer
 from .data_loader import DataLoader
 from .user_manager import UserManager
+from .collaborative import CollaborativeFilter
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +15,7 @@ class Recommender:
         self.mlb = MultiLabelBinarizer()
         self.places = []
         self.cat_matrix = None
+        self.collab = CollaborativeFilter()
 
     def build_matrix(self, places):
         try:
@@ -37,25 +40,25 @@ class Recommender:
                 self.build_matrix(self.loader.load_places())
 
             user_prefs = user.get('preferences', [])
-            if not user_prefs:
-                return []
-
             user_vec = self.mlb.transform([user_prefs])[0]
             scores = self.cat_matrix.dot(user_vec)
             
+            collab_scores = defaultdict(float)
+            for similar_user, similarity in self.collab.user_similarities.get(user_id, {}).items():
+                for pid in users.get(similar_user, {}).get('likedPlaces', []):
+                    collab_scores[pid] += similarity
+
             results = []
             for idx, place in enumerate(self.places):
                 if place['_id'] in user.get('likedPlaces', []):
                     continue
                 
-                if len(user_prefs) == 0:
-                    category_score = 0
-                else:
-                    category_score = scores[idx] / len(user_prefs)
-                
+                category_score = scores[idx] / len(user_prefs) if user_prefs else 0
                 sentiment = place.get('sentiment_avg', 0)
                 rate = min(max(place.get('rate', 0), 0), 5) / 5
-                total = 0.6 * category_score + 0.3 * sentiment + 0.1 * rate
+                collaborative = collab_scores.get(place['_id'], 0)
+                
+                total = 0.6*(0.6*category_score + 0.3*sentiment + 0.1*rate) + 0.4*collaborative
                 results.append((place['_id'], total))
             
             return [pid for pid, _ in sorted(results, key=lambda x: -x[1])[:top_n]]
