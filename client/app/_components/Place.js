@@ -7,16 +7,33 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/solid";
 import bgImage from "../../public/bg.png";
+import Map from "./Map";
 
 function capitalizeFirstLetter(val) {
   return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 }
 function Place({ place }) {
-  const { _id: id, name, description, city, image } = place;
+  const {
+    _id: id,
+    name,
+    description,
+    city,
+    image,
+    latitude,
+    longitude,
+  } = place;
+
+  console.log(image, "in page");
 
   return (
     <div className="grid grid-cols-[3fr_4fr] gap-20 border border-primary-800 py-3 px-10 mb-24 ">
       <div className="relative scale-[1.15] -translate-x-3  ">
+        {/* <Image
+          src={image == "not found" ? bgImage : image}
+          alt={`Place ${name}`}
+          fill
+          className="object-cover"
+        /> */}
         <Image
           src={bgImage}
           alt={`Place ${name}`}
@@ -39,10 +56,10 @@ function Place({ place }) {
             <MapPinIcon className="h-5 w-5 text-primary-600" />
             <span className="text-lg">{capitalizeFirstLetter(city)}</span>
           </li>
-          <li className="flex gap-3 items-center">
+          {/* <li className="flex gap-3 items-center">
             <CodeBracketIcon className="h-5 w-5 text-primary-600" />
             <span className="text-lg">{"12km"}</span>
-          </li>
+          </li> */}
         </ul>
       </div>
     </div>

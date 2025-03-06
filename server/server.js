@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 mongoose
   .connect(
-    "mongodb+srv://dibyaaadhikari:trippytriprecommendation@trippy.beh0s.mongodb.net/",
+    "mongodb+srv://dibyaadhikaree:trippyforwin@cluster0.xsvec.mongodb.net/",
     {}
   )
   .then(

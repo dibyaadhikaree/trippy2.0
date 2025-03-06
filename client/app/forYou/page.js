@@ -15,8 +15,8 @@ export const metadata = {
 export default async function Page({ searchParams }) {
   const session = await getServerSession(authConfig);
 
-  if (session.user.preferences.length == 0)
-    return <NewUserRedirect isNewUser={session.user.preferences.length == 0} />;
+  // if (session.user.preferences.length == 0)
+  //   return <NewUserRedirect isNewUser={session.user.preferences.length == 0} />;
 
   const { preferences } = await searchParams;
 

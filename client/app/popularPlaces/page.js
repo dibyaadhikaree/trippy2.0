@@ -1,6 +1,7 @@
 import Spinner from "@/app/_components/Spinner";
 import { Suspense } from "react";
 import PlacesList from "../_components/PlacesList";
+import { getPopularPlaces } from "../_services/data-services";
 
 export const metadata = {
   title: "Pouplar Places",
@@ -8,7 +9,9 @@ export const metadata = {
 
 // export const revalidate = 3600;
 
-export default function Page() {
+export default async function Page() {
+  const popularPlaces = await getPopularPlaces();
+
   return (
     <div>
       <h1 className="text-4xl mb-5 text-accent-400 font-medium">
@@ -19,7 +22,7 @@ export default function Page() {
       </p>
 
       <Suspense fallback={<Spinner />}>
-        <PlacesList />
+        <PlacesList places={popularPlaces} />
       </Suspense>
     </div>
   );

@@ -10,6 +10,12 @@ const usersSchema = new mongoose.Schema({
   },
 
   preferences: [String],
+  likedPlaces: [
+    {
+      type: String,
+      ref: "",
+    },
+  ],
 });
 
 const User = mongoose.model("User", usersSchema);
