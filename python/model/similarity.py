@@ -4,7 +4,7 @@ def compute_cosine_similarity(tfidf_matrix):
     """Computes the cosine similarity matrix from the TF-IDF matrix."""
     return cosine_similarity(tfidf_matrix)
 
-def get_top_n_similar_places(similarity_matrix, place_index, top_n=5):
+def get_top_n_similar_places(similarity_matrix, place_index, top_n=10):
     """Gets the top N most similar places to the given place index."""
     scores = list(enumerate(similarity_matrix[place_index]))
     sorted_scores = sorted(scores, key=lambda x: x[1], reverse=True)
