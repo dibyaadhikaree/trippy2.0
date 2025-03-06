@@ -4,7 +4,7 @@ const Places = require("../model/Places");
 exports.getAllPlaces = catchAsync(async (req, res, next) => {
   //Add filters on getAllPlaces
 
-  const data = await Places.find();
+  const data = await Places.find().populate("reviews");
 
   res.status(200).json({
     status: "success",

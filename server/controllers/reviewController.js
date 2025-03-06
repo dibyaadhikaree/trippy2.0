@@ -71,7 +71,20 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
 });
 
 exports.getReviewsForPlace = catchAsync(async (req, res, next) => {
+  console.log(req.params.length, "req.paaramsss ");
+
+  if (!req.params.length) {
+    console.log("here");
+    const reviews = await Review.find();
+    return res.status(200).json({
+      status: "success",
+      results: reviews.length,
+      data: reviews,
+    });
+  }
+
   const { placeId } = req.params; // Extracting placeId from route parameters
+
   const reviews = await Review.find({ place: placeId });
 
   if (!reviews.length) {
