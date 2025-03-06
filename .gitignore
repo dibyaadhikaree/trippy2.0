@@ -6,3 +6,5 @@ server/node_modules
 client/node_modules
 
 reference
+
+server/dataEntry
