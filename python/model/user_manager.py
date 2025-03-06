@@ -3,7 +3,7 @@ class UserManager:
         self.place_cats = {}
 
     def update_preferences(self, users, places):
-        self.place_cats = {p['place_id']: p['categories'] for p in places}
+        self.place_cats = {p['_id']: p['categories'] for p in places}
         updated = []
         
         for user in users:

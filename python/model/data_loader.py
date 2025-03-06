@@ -21,7 +21,7 @@ class DataLoader:
                 place_likes[pid] += 1
         
         for place in places:
-            place['like_count'] = place_likes.get(place['place_id'], 0)
+            place['like_count'] = place_likes.get(place['_id'], 0)
             place.setdefault('reviews', [])
         
         return places

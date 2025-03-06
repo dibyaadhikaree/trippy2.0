@@ -23,7 +23,7 @@ class RefreshSchema(Schema):
 def get_recommendations():
     try:
         data = RecommendSchema().load(request.get_json())
-        recs = recommender.recommend(data['user_id'], data['top_n'])
+        recs = recommender.recommend(data['_id'], data['top_n'])
         return jsonify({'recommendations': recs})
     except ValidationError as e:
         return jsonify({'error': e.messages}), 400
