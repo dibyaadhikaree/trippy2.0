@@ -1,25 +1,27 @@
 import requests
-from model.preprocessor import Preprocessor
+from collections import defaultdict
 
 class DataLoader:
     def __init__(self):
-        self.api_url = "http://localhost:2000/api/places"
-        self.preprocessor = Preprocessor()
+        self.places_url = "http://localhost:2000/api/places"
+        self.users_url = "http://localhost:2000/api/users"
 
-    def load_data(self):
-        """Fetches data from the API and computes sentiment scores."""
-        try:
-            response = requests.get(self.api_url)
-            if response.status_code == 200:
-                data = response.json()
-                places = data.get("data", [])
+    def load_users(self):
+        response = requests.get(self.users_url)
+        return response.json().get('data', [])
 
-                self.preprocessor.compute_sentiment_scores(places)
-
-                return places
-            else:
-                print(f"Error: Failed to fetch data, status code {response.status_code}")
-                return []
-        except Exception as e:
-            print(f"Error occurred: {e}")
-            return []
+    def load_places(self):
+        response = requests.get(self.places_url)
+        places = response.json().get('data', [])
+        users = self.load_users()
+        
+        place_likes = defaultdict(int)
+        for user in users:
+            for pid in user.get('likedPlaces', []):
+                place_likes[pid] += 1
+        
+        for place in places:
+            place['like_count'] = place_likes.get(place['place_id'], 0)
+            place.setdefault('reviews', [])
+        
+        return places
