@@ -15,4 +15,14 @@ const placesSchema = new mongoose.Schema(
   { _id: false }
 );
 
+placesSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "place",
+  localField: "_id",
+});
+
+// Make sure to set the schema option `toObject` and `toJSON` to `{ virtuals: true }` so it includes virtuals when you convert a document to JSON
+placesSchema.set("toJSON", { virtuals: true });
+placesSchema.set("toObject", { virtuals: true });
+
 module.exports = mongoose.model("Place", placesSchema);

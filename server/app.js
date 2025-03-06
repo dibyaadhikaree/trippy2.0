@@ -28,7 +28,7 @@ const reviewRouter = require("./routes/reviewRoute");
 app.use("/api/destinations", destinationsRouter);
 app.use("/api/places", placesRouter);
 app.use("/api/users", usersRouter);
-app.use("/api/review", reviewRouter);
+app.use("/api/reviews", reviewRouter);
 
 app.get("/", (req, res) => {
   console.log(req.body);
