@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, request
 from marshmallow import Schema, fields, ValidationError
-from model.recommender import Recommender
-from model.popularity import Popularity
-from model.refresher import Refresher
+from .recommender import Recommender
+from .popularity import Popularity
+from .refresher import Refresher
 
 app = Flask(__name__)
 
@@ -11,7 +11,7 @@ popularity = Popularity()
 refresher = Refresher()
 
 class RecommendSchema(Schema):
-    _id = fields.Str(required=True)
+    _id = fields.String(required=True)
     top_n = fields.Int(missing=10)
 
 class RefreshSchema(Schema):
