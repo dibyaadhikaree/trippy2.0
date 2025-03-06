@@ -1,6 +1,6 @@
 import requests
 from model.data_loader import DataLoader
-from model.sentiment_analyzer import SentimentAnalyzer
+from model.sentiment import SentimentAnalyzer
 from model.recommender import Recommender
 from model.user_manager import UserManager
 
