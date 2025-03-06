@@ -13,3 +13,4 @@ server/dataEntry/final_data.json
 server/dataEntry/formatted_places_with_sentiment.json
 server/dataEntry/unique__categories.json
 
+python/__pycache__
