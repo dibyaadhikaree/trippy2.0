@@ -1,6 +1,7 @@
+const catchAsync = require("../utils/catchAsyncErrors");
 const Places = require("../model/Places");
 
-exports.getAllPlaces = async (req, res, next) => {
+exports.getAllPlaces = catchAsync(async (req, res, next) => {
   //Add filters on getAllPlaces
 
   const data = await Places.find();
@@ -9,9 +10,9 @@ exports.getAllPlaces = async (req, res, next) => {
     status: "success",
     data,
   });
-};
+});
 
-exports.getPlaceById = async (req, res, next) => {
+exports.getPlaceById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
   const data = await Places.findById(id);
@@ -20,9 +21,9 @@ exports.getPlaceById = async (req, res, next) => {
     status: "success",
     data,
   });
-};
+});
 
-exports.getPopularPlaces = async (req, res, next) => {
+exports.getPopularPlaces = catchAsync(async (req, res, next) => {
   //fetch popular places from the model
 
   const response = await fetch("http://127.0.0.1:5000/popular", {
@@ -39,9 +40,9 @@ exports.getPopularPlaces = async (req, res, next) => {
     status: "success",
     data: popularPlaces,
   });
-};
+});
 
-exports.getForYou = async (req, res, next) => {
+exports.getForYou = catchAsync(async (req, res, next) => {
   console.log(req.body);
 
   // const userData = {
@@ -138,9 +139,9 @@ exports.getForYou = async (req, res, next) => {
     status: "success",
     data: forYouPlaces,
   });
-};
+});
 
-exports.createPlace = async (req, res, next) => {
+exports.createPlace = catchAsync(async (req, res, next) => {
   const place = req.body;
 
   const data = await Places.create(place);
@@ -149,4 +150,4 @@ exports.createPlace = async (req, res, next) => {
     status: "success",
     data,
   });
-};
+});

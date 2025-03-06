@@ -39,15 +39,17 @@ function capitalizeFirstLetter(val) {
 function PlaceCard({ place }) {
   const { _id: id, name, description, city, image } = place;
 
+  console.log(place);
+
   return (
     <div className="flex border-primary-800 border">
-      <div className="flex-1 relative ">
+      <div className="flex-1 relative w-full ">
         <Image
-          src={bgImage}
+          src={image == "not found" ? bgImage : image}
+          // src={bgImage}
           fill
           className="object-cover object-top"
           alt="Mountains and forests with two cabins"
-          placeholder="blur"
         />
       </div>
       <div className="flex-grow">
@@ -60,12 +62,12 @@ function PlaceCard({ place }) {
             <MapPinIcon className="h-5 w-5 text-primary-600" />
             {capitalizeFirstLetter(city)}
           </div>
-
-          <div className="flex gap-3 items-center mb-2">
+          {/* 1111111 PUT THE DISTNACE HERE */}
+          {/* <div className="flex gap-3 items-center mb-2">
             {" "}
             <CodeBracketIcon className="h-5 w-5 text-primary-600" />
             16.5km
-          </div>
+          </div> */}
         </div>
 
         <div className="bg-primary-950 border-t border-t-primary-800 text-right">

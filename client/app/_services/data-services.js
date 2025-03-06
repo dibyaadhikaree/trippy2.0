@@ -26,23 +26,23 @@ export async function getAllPlaces() {
 
 async function getImageUrl(filePageUrl) {
   try {
-    // Extract the filename from the provided URL
-    const filename = filePageUrl.split("/").pop();
-    const apiUrl = `https://commons.wikimedia.org/w/api.php?action=query&titles=File:${filename}&prop=imageinfo&iiprop=url&format=json&origin=*`;
+    let imageUrl;
+    const fileTitle = filePageUrl.split("/wiki/")[1];
+    const apiUrl = `https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(
+      fileTitle
+    )}&prop=imageinfo&iiprop=url&format=json`;
 
-    // Fetch data from the MediaWiki API
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-
-    // Extract the image URL from the response
+    const res = await fetch(apiUrl);
+    const data = await res.json();
     const pages = data.query.pages;
-    const page = Object.values(pages)[0];
-    const imageUrl = page.imageinfo[0].url;
-
+    for (const pageId in pages) {
+      const imageInfo = pages[pageId].imageinfo[0];
+      imageUrl = imageInfo.url;
+      console.log("Image URL:", imageUrl);
+    }
     return imageUrl;
-  } catch (error) {
-    console.error("Error fetching image URL:", error);
-    return null;
+  } catch (err) {
+    return "not found";
   }
 }
 
@@ -59,7 +59,16 @@ export async function getForYou(preference) {
 
   const data = await res.json();
 
-  return data.data;
+  const placeswImage = await Promise.all(
+    data.data.map(async (place) => {
+      return {
+        ...place,
+        image: await getImageUrl(place.image),
+      };
+    })
+  );
+
+  return placeswImage;
 }
 
 export async function getPopularPlaces() {
@@ -69,9 +78,20 @@ export async function getPopularPlaces() {
 
   const data = await res.json();
 
-  console.log(data);
+  const places = data.data;
 
-  return data;
+  const placeswImage = await Promise.all(
+    places.map(async (place) => {
+      return {
+        ...place,
+        image: await getImageUrl(place.image),
+      };
+    })
+  );
+
+  console.log(placeswImage, "places w image");
+
+  return placeswImage;
 }
 
 export async function getUserFromEmail(email) {
@@ -136,4 +156,34 @@ export async function getPlaceById(id) {
   const data = await res.json();
 
   return data;
+}
+
+export async function getReviewsForPlace(id) {
+  const res = await fetch(baseUrl + `places/${id}/reviews`, {
+    method: "GET",
+  });
+
+  const data = await res.json();
+
+  return data;
+}
+export async function createReview(id, formData) {
+  const res = await fetch(baseUrl + `places/${id}/reviews`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData),
+  });
+  const data = await res.json();
+
+  return data;
+}
+
+export async function getHeadDestinations() {
+  const res = await fetch(baseUrl + `destinations`, {
+    method: "GET",
+  });
+
+  const data = await res.json();
+
+  return data.data;
 }
