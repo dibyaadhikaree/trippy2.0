@@ -25,7 +25,7 @@ class Recommender:
         
         results = []
         for idx, place in enumerate(self.places):
-            if place['place_id'] in user.get('likedPlaces', []):
+            if place['_id'] in user.get('likedPlaces', []):
                 continue
             
             cat_score = scores[idx] / len(user['preferences'])
@@ -33,6 +33,6 @@ class Recommender:
             rate_score = place.get('rate', 0) / 5
             
             total = 0.6*cat_score + 0.3*sent_score + 0.1*rate_score
-            results.append((place['place_id'], total))
+            results.append((place['_id'], total))
         
         return [pid for pid, _ in sorted(results, key=lambda x: -x[1])[:top_n]]
