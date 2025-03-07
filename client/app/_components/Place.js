@@ -5,18 +5,18 @@ import TextExpander from "@/app/_components/TextExpander";
 import {
   CodeBracketIcon,
   EyeSlashIcon,
+  HeartIcon,
   MapPinIcon,
   UsersIcon,
 } from "@heroicons/react/24/solid";
 import bgImage from "../../public/bg.png";
 import React, { useState } from "react";
-import { HeartIcon } from "@heroicons/react/solid"; // Ensure you have @heroicons/react
-import { HeartIcon as HeartOutline } from "@heroicons/react/outline"; // For the outlined heart
+import { updateUserPreference } from "../_services/data-services";
 
 function capitalizeFirstLetter(val) {
   return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 }
-function Place({ place, liked: isLiked }) {
+function Place({ place, user }) {
   const {
     _id: id,
     name,
@@ -27,18 +27,31 @@ function Place({ place, liked: isLiked }) {
     longitude,
   } = place;
 
+  console.log(place._id, ":place id ", "user liked", user.likedPlaces);
+
   // State to manage whether the place is liked
-  const [liked, setLiked] = useState(isLiked);
+  const [liked, setLiked] = useState(user?.likedPlaces.includes(id));
 
   // Toggle the liked state
   const toggleLike = () => {
     setLiked(!liked);
     // Here, you might also want to call an API to update the backend
-    updateLikeStatus(id, !liked);
+
+    let likedPlaces = user.likedPlaces; //[dabagbfa , dafadsf ]  , supppose we have dabagbfa
+    console.log(likedPlaces, "before ");
+    console.log(likedPlaces.includes(place._id));
+    if (likedPlaces.includes(place._id)) {
+      likedPlaces = likedPlaces.filter((place) => place != id);
+      console.log("after removing 1 like", likedPlaces);
+    } else likedPlaces.push(place._id);
+
+    console.log(likedPlaces, "after like ");
+
+    updateUserPreference(user.userId, { likedPlaces: likedPlaces }, id);
   };
 
   return (
-    <div className="grid grid-cols-[3fr_4fr] gap-20 border border-primary-800 py-3 px-10 mb-24 ">
+    <div className="grid grid-cols-[3fr_4fr] gap-20 border border-primary-800 py-3 px-10 mb-24 relative ">
       <div className="relative scale-[1.15] -translate-x-3  ">
         {/* <Image
           src={image == "not found" ? bgImage : image}
@@ -55,8 +68,19 @@ function Place({ place, liked: isLiked }) {
       </div>
 
       <div>
-        <h3 className="text-accent-100 font-black text-7xl mb-5 translate-x-[-254px] bg-primary-950 p-6 pb-1 w-[150%]">
+        <h3 className="flex justify-between text-accent-100 font-black text-7xl mb-5 translate-x-[-254px] bg-primary-950 p-6 pb-1 w-[150%]">
           {capitalizeFirstLetter(name)}
+
+          <button
+            onClick={toggleLike}
+            className="text-red-500 top-[0px] absolute right-[-10px] mx-4"
+          >
+            {liked ? (
+              <HeartIcon className="h-12 w-12  text-red-700" />
+            ) : (
+              <HeartIcon className="h-12 w-12 text-primary-700 outline-1 hover:text-red-700" />
+            )}
+          </button>
         </h3>
 
         <p className="text-lg text-primary-300 mb-10">

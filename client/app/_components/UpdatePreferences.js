@@ -34,7 +34,9 @@ function UpdatePreferences({ user }) {
       return;
     }
 
-    const data = await updateUserPreference(user, selectedPreferences);
+    const data = await updateUserPreference(user, {
+      preferences: selectedPreferences,
+    });
 
     const params = new URLSearchParams();
     params.set("preferences", selectedPreferences.join(","));

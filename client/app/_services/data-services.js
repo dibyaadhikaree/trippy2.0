@@ -111,21 +111,23 @@ export async function createUser(user) {
   return currentUser.data;
 }
 
-export async function updateUserPreference(user, preferences) {
+export async function updateUserPreference(user, data, path) {
   try {
-    const response = await fetch(baseUrl + "users", {
+    const response = await fetch(baseUrl + "users/" + user, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        id: user.userId,
-        preferences,
-      }),
+      body: JSON.stringify(data),
     });
 
     const updated = await response.json();
 
+    console.log(updated, "updating wiht", data, path);
+    if (path) {
+      revalidatePath("/places/" + path);
+      console.log("revalidating");
+    }
     return updated;
   } catch (err) {
     console.log(err);

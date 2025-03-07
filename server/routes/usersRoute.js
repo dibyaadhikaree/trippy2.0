@@ -8,7 +8,8 @@ Router.route("/getUserFromEmail/:email").get(authController.getUserFromEmail);
 
 Router.route("/")
   .get(authController.getAllUsers)
-  .post(authController.createUser)
-  .patch(authController.setUserPreferences);
+  .post(authController.createUser);
+
+Router.route("/:userId").patch(authController.setUserPreferences);
 
 module.exports = Router;

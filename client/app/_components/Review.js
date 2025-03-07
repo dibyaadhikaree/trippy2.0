@@ -30,8 +30,6 @@ export default async function Review({ reviews }) {
 
   if (reviews.length == 0) return <h1>NO REVIEWS FOR THIS PLACE</h1>;
 
-  console.log(reviews, "for this plae");
-
   let currentUserReview = reviews.filter((review) => {
     return review?.user?._id == session.user.userId;
   });

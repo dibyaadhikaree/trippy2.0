@@ -47,13 +47,12 @@ exports.createUser = async (req, res, next) => {
 
 exports.setUserPreferences = async (req, res, next) => {
   try {
+    const id = req.params.userId;
     const data = req.body;
 
-    console.log("Updating user", data);
+    console.log("Updating user id and data", id, data);
 
-    const updatedPref = await User.findByIdAndUpdate(data.id, {
-      preferences: data.preferences,
-    });
+    const updatedPref = await User.findByIdAndUpdate(id, data);
 
     res.status(200).json({
       data: updatedPref,

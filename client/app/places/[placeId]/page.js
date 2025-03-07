@@ -32,8 +32,6 @@ export default async function Page({ params }) {
 
   const session = await getServerSession(authConfig);
 
-  const liked = session?.user?.likedPlaces.includes(placeId);
-
   try {
     const { data: place } = await getPlaceById(placeId.placeId);
 
@@ -41,7 +39,7 @@ export default async function Page({ params }) {
 
     return (
       <div className="max-w-6xl mx-auto mt-8">
-        <Place place={place} liked={liked} />
+        <Place place={place} user={session.user} />
         <div className="grid grid-cols-2  min-h-[400px] mb-10 text-accent-400 items-center">
           <div className="border-2 border-primary-700 ">
             <Review reviews={reviews} />
