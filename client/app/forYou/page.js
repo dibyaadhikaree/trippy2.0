@@ -18,9 +18,9 @@ export default async function Page({ searchParams }) {
   // if (session.user.preferences.length == 0)
   //   return <NewUserRedirect isNewUser={session.user.preferences.length == 0} />;
 
-  const { preferences } = await searchParams;
+  // const { preferences } = await searchParams;
 
-  const user_pref = preferences?.split(",") ?? session.user.preferences;
+  // const user_pref = preferences?.split(",") ?? session.user.preferences;
 
   // const filter = await searchParams?.preferences;
 
@@ -36,9 +36,8 @@ export default async function Page({ searchParams }) {
       <h1 className="text-4xl mb-8 text-accent-400 font-medium">
         Trips For You
       </h1>
-      <Filter user={session.user} />
       <Suspense fallback={<Spinner />}>
-        <ForYouList userPref={user_pref} />
+        <ForYouList user={session.user.userId} />
       </Suspense>
     </div>
   );

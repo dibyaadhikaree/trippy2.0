@@ -37,9 +37,8 @@ function capitalizeFirstLetter(val) {
   return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 }
 function PlaceCard({ place }) {
-  const { _id: id, name, description, city, image } = place;
-
-  console.log(place);
+  const { _id: id, name, description, city } = place;
+  const image = "not found";
 
   return (
     <div className="flex border-primary-800 border">

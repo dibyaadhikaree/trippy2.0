@@ -30,10 +30,10 @@ exports.getPopularPlaces = catchAsync(async (req, res, next) => {
     method: "GET",
   });
 
-  const { popular_places } = await response.json();
+  const { popular } = await response.json();
 
   const popularPlaces = await Places.find({
-    _id: { $in: popular_places },
+    _id: { $in: popular },
   });
 
   res.status(200).json({
@@ -46,78 +46,74 @@ exports.getForYou = catchAsync(async (req, res, next) => {
   console.log(req.body);
 
   // const userData = {
-  //   preferences: req.body.preferences,
+  //   preferences: req.body.preference,
   // };
 
-  const userData = {
-    preferences: req.body.preference,
-  };
+  // const categoryList = {
+  //   "Historical and Cultural Sites": [
+  //     "archaeology",
+  //     "architecture",
+  //     "biographical_museums",
+  //     "castles",
+  //     "cathedrals",
+  //     "historic_architecture",
+  //     "historic_settlements",
+  //     "historical_places",
+  //     "monasteries",
+  //     "monuments_and_memorials",
+  //     "museums",
+  //     "palaces",
+  //     "sculptures",
+  //   ],
+  //   "Religious Sites": [
+  //     "buddhist_temples",
+  //     "hindu_temples",
+  //     "mosques",
+  //     "other_temples",
+  //     "religion",
+  //   ],
+  //   "Natural Attractions": [
+  //     "aquatic_protected_areas",
+  //     "caves",
+  //     "geological_formations",
+  //     "mountain_peaks",
+  //     "national_parks",
+  //     "nature_reserves",
+  //     "waterfalls",
+  //     "wildlife_reserves",
+  //     "zoos",
+  //   ],
+  //   "Parks and Gardens": ["gardens_and_parks", "urban_environment"],
+  //   "Entertainment and Leisure": [
+  //     "cinemas",
+  //     "theatres_and_entertainments",
+  //     "tourist_facilities",
+  //   ],
+  //   "Food and Shopping": ["bakeries", "foods", "restaurants", "shops"],
+  //   "Landmarks and Viewpoints": [
+  //     "clock_towers",
+  //     "observation_towers",
+  //     "squares",
+  //     "towers",
+  //     "view_points",
+  //   ],
+  // };
 
-  const categoryList = {
-    "Historical and Cultural Sites": [
-      "archaeology",
-      "architecture",
-      "biographical_museums",
-      "castles",
-      "cathedrals",
-      "historic_architecture",
-      "historic_settlements",
-      "historical_places",
-      "monasteries",
-      "monuments_and_memorials",
-      "museums",
-      "palaces",
-      "sculptures",
-    ],
-    "Religious Sites": [
-      "buddhist_temples",
-      "hindu_temples",
-      "mosques",
-      "other_temples",
-      "religion",
-    ],
-    "Natural Attractions": [
-      "aquatic_protected_areas",
-      "caves",
-      "geological_formations",
-      "mountain_peaks",
-      "national_parks",
-      "nature_reserves",
-      "waterfalls",
-      "wildlife_reserves",
-      "zoos",
-    ],
-    "Parks and Gardens": ["gardens_and_parks", "urban_environment"],
-    "Entertainment and Leisure": [
-      "cinemas",
-      "theatres_and_entertainments",
-      "tourist_facilities",
-    ],
-    "Food and Shopping": ["bakeries", "foods", "restaurants", "shops"],
-    "Landmarks and Viewpoints": [
-      "clock_towers",
-      "observation_towers",
-      "squares",
-      "towers",
-      "view_points",
-    ],
-  };
+  // // Initialize an array to hold the subcategories
+  // let userPreferences = [];
 
-  // Initialize an array to hold the subcategories
-  let userPreferences = [];
+  // // Iterate over the user's selected main categories
+  // userData.preferences.forEach((category) => {
+  //   // Check if the category exists in the mapping
+  //   if (categoryList[category]) {
+  //     // Add the subcategories to the userPreferences array
+  //     userPreferences = userPreferences.concat(categoryList[category]);
+  //   }
+  // });
 
-  // Iterate over the user's selected main categories
-  userData.preferences.forEach((category) => {
-    // Check if the category exists in the mapping
-    if (categoryList[category]) {
-      // Add the subcategories to the userPreferences array
-      userPreferences = userPreferences.concat(categoryList[category]);
-    }
-  });
-
-  const requestBody = {
-    user_preferences: userPreferences,
-  };
+  // const requestBody = {
+  //   user_preferences: userPreferences,
+  // };
 
   // Send the POST request to the Python backend
   const response = await fetch("http://localhost:5000/recommend", {
@@ -125,7 +121,7 @@ exports.getForYou = catchAsync(async (req, res, next) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(requestBody),
+    body: JSON.stringify(req.body),
   });
 
   // Parse the JSON response

@@ -14,8 +14,8 @@ import { getForYou } from "@/app/_services/data-services";
 //     "__v": 0
 // },
 
-async function ForYouList({ userPref }) {
-  const forYou = await getForYou(userPref);
+async function ForYouList({ user }) {
+  const forYou = await getForYou(user);
 
   return (
     <div>

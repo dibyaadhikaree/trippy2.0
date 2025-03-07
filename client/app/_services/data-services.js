@@ -50,29 +50,20 @@ async function getImageUrl(filePageUrl) {
   }
 }
 
-export async function getForYou(preference) {
+export async function getForYou(user) {
   const res = await fetch(baseUrl + `places/forYou`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      preference,
+      _id: user,
     }),
   });
 
   const data = await res.json();
 
-  const placeswImage = await Promise.all(
-    data.data.map(async (place) => {
-      return {
-        ...place,
-        image: await getImageUrl(place.image),
-      };
-    })
-  );
-
-  return placeswImage;
+  return data.data;
 }
 
 export async function getPopularPlaces() {
@@ -84,18 +75,7 @@ export async function getPopularPlaces() {
 
   const places = data.data;
 
-  const placeswImage = await Promise.all(
-    places.map(async (place) => {
-      return {
-        ...place,
-        image: await getImageUrl(place.image),
-      };
-    })
-  );
-
-  console.log(placeswImage, "places w image");
-
-  return placeswImage;
+  return places;
 }
 
 export async function getUserFromEmail(email) {
