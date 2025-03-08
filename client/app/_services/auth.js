@@ -2,8 +2,7 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
 import { getUserFromEmail, createUser } from "@/app/_services/data-services";
-import { redirect } from "next/dist/server/api-utils";
-import { cookies } from "next/headers";
+
 const authConfig = {
   providers: [
     Google({

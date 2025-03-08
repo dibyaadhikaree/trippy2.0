@@ -204,7 +204,7 @@ export default function SearchPage() {
     try {
       // Construct the query parameters
       const queryParams = new URLSearchParams({
-        headDestination: location, // Send the headDestination._id
+        city: location, // Send the headDestination._id
         preferences: preferences.join(","), // Convert array to comma-separated string
       });
 

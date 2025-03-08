@@ -30,5 +30,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/forYou", "/popularPlaces"], // Protect /dashboard and its subpages
+  matcher: ["/forYou", "/popularPlaces", "/places/:path*"], // Protect /dashboard and its subpages
 };

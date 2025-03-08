@@ -1,10 +1,51 @@
 const catchAsync = require("../utils/catchAsyncErrors");
 const Places = require("../model/Places");
 
+// exports.getAllPlaces = catchAsync(async (req, res, next) => {
+//   //Add filters on getAllPlaces
+
+//   const data = await Places.find().populate("reviews");
+
+//   res.status(200).json({
+//     status: "success",
+//     data,
+//   });
+// });
+
 exports.getAllPlaces = catchAsync(async (req, res, next) => {
   //Add filters on getAllPlaces
 
-  const data = await Places.find().populate("reviews");
+  const { city, categories } = req.query;
+
+  // Convert query parameters to arrays if they exist
+  // const cityArray = cities ? cities.split(",") : [];
+  const categoryArray = categories ? categories.split(",") : [];
+
+  // Build the aggregation pipeline
+  const pipeline = [];
+
+  // Filter by cities if provided
+  if (city) {
+    pipeline.push({ $match: { city: { $in: [city] } } });
+  }
+
+  // Filter by categories if provided
+  if (categoryArray.length > 0) {
+    pipeline.push({ $match: { categories: { $in: categoryArray } } });
+  }
+
+  // Populate reviews
+  pipeline.push({
+    $lookup: {
+      from: "reviews",
+      localField: "_id",
+      foreignField: "place",
+      as: "reviews",
+    },
+  });
+
+  // Execute the aggregation pipeline
+  const data = await Places.aggregate(pipeline);
 
   res.status(200).json({
     status: "success",
@@ -45,77 +86,6 @@ exports.getPopularPlaces = catchAsync(async (req, res, next) => {
 exports.getForYou = catchAsync(async (req, res, next) => {
   console.log(req.body);
 
-  // const userData = {
-  //   preferences: req.body.preference,
-  // };
-
-  // const categoryList = {
-  //   "Historical and Cultural Sites": [
-  //     "archaeology",
-  //     "architecture",
-  //     "biographical_museums",
-  //     "castles",
-  //     "cathedrals",
-  //     "historic_architecture",
-  //     "historic_settlements",
-  //     "historical_places",
-  //     "monasteries",
-  //     "monuments_and_memorials",
-  //     "museums",
-  //     "palaces",
-  //     "sculptures",
-  //   ],
-  //   "Religious Sites": [
-  //     "buddhist_temples",
-  //     "hindu_temples",
-  //     "mosques",
-  //     "other_temples",
-  //     "religion",
-  //   ],
-  //   "Natural Attractions": [
-  //     "aquatic_protected_areas",
-  //     "caves",
-  //     "geological_formations",
-  //     "mountain_peaks",
-  //     "national_parks",
-  //     "nature_reserves",
-  //     "waterfalls",
-  //     "wildlife_reserves",
-  //     "zoos",
-  //   ],
-  //   "Parks and Gardens": ["gardens_and_parks", "urban_environment"],
-  //   "Entertainment and Leisure": [
-  //     "cinemas",
-  //     "theatres_and_entertainments",
-  //     "tourist_facilities",
-  //   ],
-  //   "Food and Shopping": ["bakeries", "foods", "restaurants", "shops"],
-  //   "Landmarks and Viewpoints": [
-  //     "clock_towers",
-  //     "observation_towers",
-  //     "squares",
-  //     "towers",
-  //     "view_points",
-  //   ],
-  // };
-
-  // // Initialize an array to hold the subcategories
-  // let userPreferences = [];
-
-  // // Iterate over the user's selected main categories
-  // userData.preferences.forEach((category) => {
-  //   // Check if the category exists in the mapping
-  //   if (categoryList[category]) {
-  //     // Add the subcategories to the userPreferences array
-  //     userPreferences = userPreferences.concat(categoryList[category]);
-  //   }
-  // });
-
-  // const requestBody = {
-  //   user_preferences: userPreferences,
-  // };
-
-  // Send the POST request to the Python backend
   const response = await fetch("http://localhost:5000/recommend", {
     method: "POST",
     headers: {

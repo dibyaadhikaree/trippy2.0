@@ -13,6 +13,7 @@ import {
 } from "@/app/_services/data-services";
 import { MapIcon } from "@heroicons/react/24/solid";
 import { getServerSession } from "next-auth";
+import { redirect } from "next/dist/server/api-utils";
 
 //   return cabins.map((cabin) => ({
 //     id: cabin._id,
