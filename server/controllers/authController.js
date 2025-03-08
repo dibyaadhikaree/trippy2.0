@@ -1,3 +1,4 @@
+const CategoryModel = require("../model/CategoryModel");
 const User = require("../model/UsersModel");
 
 const catchAsync = require("../utils/catchAsyncErrors");
@@ -21,12 +22,22 @@ exports.getUserFromEmail = async (req, res, next) => {
   }
 };
 exports.getAllUsers = async (req, res, next) => {
-  const data = await User.find();
+  const users = await User.find().lean(); // Fetch users as plain objects
 
-  res.status(200).json({
-    status: "success",
-    data,
-  });
+  // Compute mappedPreferences dynamically
+  for (const user of users) {
+    if (!user.preferences || user.preferences.length === 0) {
+      user.preferences = [];
+      continue;
+    }
+
+    const matchedCategories = await CategoryModel.find({
+      name: { $in: user.preferences },
+    }).select("subcategories");
+    user.preferences = matchedCategories.flatMap((cat) => cat.subcategories);
+  }
+
+  res.json({ data: users });
 };
 
 exports.createUser = async (req, res, next) => {

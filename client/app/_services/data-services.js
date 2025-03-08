@@ -126,8 +126,16 @@ export async function updateUserPreference(user, data, path) {
     console.log(updated, "updating wiht", data, path);
     if (path) {
       revalidatePath("/places/" + path);
-      console.log("revalidating");
     }
+
+    const res = await fetch("http://localhost:5000/refresh", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    });
+
     return updated;
   } catch (err) {
     console.log(err);
@@ -178,6 +186,25 @@ export async function deleteReview(id) {
 
 export async function getHeadDestinations() {
   const res = await fetch(baseUrl + `destinations`, {
+    method: "GET",
+  });
+
+  const data = await res.json();
+
+  return data.data;
+}
+export async function getCategoryList() {
+  const res = await fetch(baseUrl + `categories`, {
+    method: "GET",
+  });
+
+  const data = await res.json();
+
+  return data.data;
+}
+
+export async function getMappedCategory() {
+  const res = await fetch(baseUrl + `categories`, {
     method: "GET",
   });
 

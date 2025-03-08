@@ -24,11 +24,13 @@ const destinationsRouter = require("./routes/destinationsRoute");
 const placesRouter = require("./routes/placesRoute");
 const usersRouter = require("./routes/usersRoute");
 const reviewRouter = require("./routes/reviewRoute");
+const categoryRouter = require("./routes/categoryRoute");
 
 app.use("/api/destinations", destinationsRouter);
 app.use("/api/places", placesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/reviews", reviewRouter);
+app.use("/api/categories", categoryRouter);
 
 app.get("/", (req, res) => {
   console.log(req.body);

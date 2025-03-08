@@ -4,20 +4,14 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { updateUserPreference } from "../_services/data-services";
 
-function UpdatePreferences({ user }) {
-  const filters = [
-    "Historical and Cultural Sites",
-    "Religious Sites",
-    "Natural Attractions",
-    "Parks and Gardens",
-    "Entertainment and Leisure",
-    "Food and Shopping",
-    "Landmarks and Viewpoints",
-  ];
+function UpdatePreferences({ user, categories }) {
+  const filters = categories.map((cat) => cat.name);
 
   const [selectedPreferences, setSelectedPreferences] = useState(
     user.preferences
   );
+
+  console.log(user.preferences, "user pref now ");
   const router = useRouter();
 
   const handleFilterChange = (preference) => {
@@ -34,14 +28,15 @@ function UpdatePreferences({ user }) {
       return;
     }
 
-    const data = await updateUserPreference(user, {
+    const data = await updateUserPreference(user.userId, {
       preferences: selectedPreferences,
     });
 
-    const params = new URLSearchParams();
-    params.set("preferences", selectedPreferences.join(","));
+    // const params = new URLSearchParams();
+    // params.set("preferences", selectedPreferences.join(","));
 
-    router.push(`/forYou?${params.toString()}`);
+    // router.push(`/forYou?${params.toString()}`);
+    router.push(`/forYou`);
   };
   return (
     <div className="bg-primary-900 py-8 px-12 text-lg flex gap-6 flex-col ">

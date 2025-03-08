@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const Category = require("../model/CategoryModel");
+
 // booking  = guest renting a cabin
 // i.e connecting cabin with guest
 

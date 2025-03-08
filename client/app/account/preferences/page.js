@@ -1,5 +1,6 @@
 import UpdatePreferences from "@/app/_components/UpdatePreferences";
 import { authConfig } from "@/app/_services/auth";
+import { getCategoryList } from "@/app/_services/data-services";
 import { getServerSession } from "next-auth";
 
 export const metadata = {
@@ -8,6 +9,8 @@ export const metadata = {
 
 export default async function Page() {
   const session = await getServerSession(authConfig);
+
+  const categories = await getCategoryList();
 
   // if (session.user.preferences.length != 0) redirect("/");
 
@@ -23,7 +26,7 @@ export default async function Page() {
         Choose it so we can give you the best recommendations!
       </p>
 
-      <UpdatePreferences user={session.user} />
+      <UpdatePreferences user={session.user} categories={categories} />
     </div>
   );
 }

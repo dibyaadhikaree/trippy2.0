@@ -102,7 +102,88 @@ export default function SearchPage() {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const data = await getHeadDestination();
+        const data = [
+          "Glenolden",
+          "Oldsmar",
+          "Santa Barbara",
+          "Bala Cynwyd",
+          "Reno",
+          "University City",
+          "St Louis",
+          "Newtown",
+          "Ballwin",
+          "Bryn Mawr",
+          "Burlington",
+          "Brownsburg",
+          "Indianapolis",
+          "New Orleans",
+          "Pottstown",
+          "Tucson",
+          "Ambler",
+          "Plant City",
+          "Ardmore",
+          "Riverside",
+          "St. Louis",
+          "Edmonton",
+          "Saint Louis",
+          "Narberth",
+          "Southampton",
+          "Malvern",
+          "Carpinteria",
+          "Hermitage",
+          "Tampa",
+          "Chadds Ford",
+          "Cherry Hill",
+          "Langhorne",
+          "Lambertville",
+          "Carmel",
+          "Lutz",
+          "Pinellas Park",
+          "Virginia City",
+          "Alton",
+          "Goleta",
+          "Philadelphia",
+          "King of Prussia",
+          "Boise",
+          "Largo",
+          "Downingtown",
+          "Spring Hill",
+          "Noblesville",
+          "Nashville",
+          "Tampa Bay",
+          "Lebanon",
+          "Franklin",
+          "Warminster",
+          "Exton",
+          "Brandon",
+          "Fishers",
+          "Saint Petersburg",
+          "Meridian",
+          "Mount Juliet",
+          "Media",
+          "Trenton",
+          "Sherwood Park",
+          "Ruskin",
+          "Florissant",
+          "Ashland City",
+          "Edwardsville",
+          "Conshohocken",
+          "Voorhees",
+          "Harvey",
+          "Skippack",
+          "Treasure Island",
+          "West Chester",
+          "Town and Country",
+          "Clearwater",
+          "Horsham",
+          "Kenner",
+          "Isla Vista",
+          "St Petersburg",
+          "Norristown",
+          "Hazelwood",
+          "Hernando Beach",
+          "Wesley Chapel",
+        ];
         setLocations(data); // Set the fetched locations
       } catch (error) {
         console.error("Error fetching locations:", error);
@@ -170,8 +251,8 @@ export default function SearchPage() {
           >
             <option value="">Choose a location</option>
             {locations.map((loc) => (
-              <option key={loc._id} value={loc._id}>
-                {capitalizeFirstLetter(loc.name)}
+              <option key={loc} value={loc}>
+                {capitalizeFirstLetter(loc)}
               </option>
             ))}
           </select>

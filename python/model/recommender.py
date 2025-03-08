@@ -39,7 +39,8 @@ class Recommender:
             if self.cat_matrix is None:
                 self.build_matrix(self.loader.load_places())
 
-            user_prefs = user.get('preferences', [])
+            user_prefs = user.get('preferences', [])  
+            # change code here get user_prefs with headCategory :=> food and drinks , outdoors etc , get mapped  category here 
             user_vec = self.mlb.transform([user_prefs])[0]
             scores = self.cat_matrix.dot(user_vec)
             
