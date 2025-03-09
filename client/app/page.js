@@ -9,8 +9,12 @@ import NewUserRedirect from "./_components/NewUserRedirect";
 export default async function Page() {
   const session = await getServerSession(authConfig);
 
-  if (session && session?.user?.preferences.length == 0)
-    return <NewUserRedirect isNewUser={session.user.preferences.length == 0} />;
+  if (session && session?.user?.selectedPreferences.length == 0)
+    return (
+      <NewUserRedirect
+        isNewUser={session?.user?.selectedPreferences.length == 0}
+      />
+    );
 
   return (
     <main className="mt-[65px]">

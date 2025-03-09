@@ -11,7 +11,7 @@ const usersSchema = new mongoose.Schema({
     type: String,
   },
 
-  preferences: [String],
+  selectedPreferences: [String],
   likedPlaces: [
     {
       type: String,
