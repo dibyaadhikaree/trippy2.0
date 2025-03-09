@@ -71,7 +71,7 @@ class Refresher:
             
             # Load data with appropriate caching
             places = self.loader.load_places(
-                force_reload=places_changed or reviews_changed
+                force_reload=places_changed or reviews_changed or users_changed
             )
             
             # Process reviews first to ensure sentiment_avg is current
