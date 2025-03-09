@@ -69,13 +69,10 @@ class Refresher:
                 users_changed, places_changed, reviews_changed
             )
             
-            # Load data with appropriate caching
-            places = self.loader.load_places(
-                force_reload=places_changed or reviews_changed or users_changed
-            )
-            
+
             # Process reviews first to ensure sentiment_avg is current
             if reviews_changed or places_changed:
+                places = self.loader.load_places(force_reload=True)
                 logger.debug("Processing reviews and places")
                 places = self.process_reviews(places)
                 self.recommender.build_matrix(places)
@@ -84,23 +81,10 @@ class Refresher:
             if users_changed:
                 logger.debug("Processing user changes")
                 users = self.loader.load_users(force_reload=True)
-                updated_users = self.users.update_preferences(users, places)
+                updated_users = self.manager.update_preferences(users, places)
                 
                 # Update collaborative filtering model
                 self.recommender.collab.build(users)
-                
-                # Persist user preference changes
-                for user in updated_users:
-                    try:
-                        response = requests.patch(
-                            f"{self.loader.users_url}/{user['_id']}",
-                            json=user,
-                            timeout=5
-                        )
-                        if response.status_code != 200:
-                            logger.warning("Failed to update user %s", user['_id'])
-                    except Exception as e:
-                        logger.error("User update error: %s", str(e))
 
             logger.info("Refresh completed successfully")
             return True
