@@ -8,7 +8,7 @@ function UpdatePreferences({ user, categories }) {
   const filters = categories.map((cat) => cat.name);
 
   const [selectedPreferences, setSelectedPreferences] = useState(
-    user.preferences
+    user.preferences ?? []
   );
 
   console.log(user.preferences, "user pref now ");

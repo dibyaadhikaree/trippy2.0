@@ -35,12 +35,17 @@ class Recommender:
             
             # Fallback for invalid users or empty preferences
             if not user or not user.get('preferences'):
+<<<<<<< HEAD
                 if user.get('likedPlaces'):
                     logger.info("Generating initial preferences from liked places")
                     self.manager.update_preferences([user], self.loader.load_places())
                     user = next(u for u in users if u['_id'] == user_id)
                 else:
                     return []
+=======
+                print("no user")
+                return []
+>>>>>>> ce1d28e8f453ab0d6a03a22436dcf3842767be6a
 
             # Build category matrix if missing
             if self.cat_matrix is None:

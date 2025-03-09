@@ -61,8 +61,13 @@
 "use client";
 // pages/search.js
 import { useState, useEffect } from "react";
-import { getHeadDestinations } from "../_services/data-services";
+import {
+  getCategoryList,
+  getHeadDestinations,
+} from "../_services/data-services";
 import PlacesList from "../_components/PlacesList";
+import TripsFilter from "../_components/TripsFilter";
+import { useSearchParams } from "next/navigation";
 
 // pages/search.js
 
@@ -86,17 +91,12 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false); // Loading state for form submission
   const [locations, setLocations] = useState([]); // State to store fetched locations
   const [locationsLoading, setLocationsLoading] = useState(true); // Loading state for locations
-
+  const [preferenceOptions, setPreferenceOptions] = useState([]);
   // List of preferences (you can fetch these dynamically if needed)
-  const preferenceOptions = [
-    "Historical and Cultural Sites",
-    "Religious Sites",
-    "Natural Attractions",
-    "Parks and Gardens",
-    "Entertainment and Leisure",
-    "Food and Shopping",
-    "Landmarks and Viewpoints",
-  ];
+
+  const searchParams = useSearchParams();
+
+  console.log(searchParams.get("preferences"));
 
   // Fetch locations on component mount
   useEffect(() => {
@@ -192,7 +192,13 @@ export default function SearchPage() {
       }
     };
 
+    const fetchCategories = async () => {
+      const data = await getCategoryList();
+      setPreferenceOptions(data.map((cat) => cat.name));
+    };
+
     fetchLocations();
+    fetchCategories();
   }, []);
 
   // Handle form submission
@@ -205,7 +211,7 @@ export default function SearchPage() {
       // Construct the query parameters
       const queryParams = new URLSearchParams({
         city: location, // Send the headDestination._id
-        preferences: preferences.join(","), // Convert array to comma-separated string
+        preferences: searchParams.get("preferences") ?? "", // Convert array to comma-separated string
       });
 
       // Fetch data from the backend
@@ -213,10 +219,11 @@ export default function SearchPage() {
         `http://localhost:2000/api/places?${queryParams}`
       );
 
-      console.log(
-        "submitting wiht params",
-        `http://localhost:2000/api/places?${queryParams}`
-      );
+      // console.log(
+      //   "submitting wiht params",
+      //   `http://localhost:2000/api/places?${queryParams}`
+      // );
+
       if (!response.ok) {
         throw new Error("Failed to fetch data");
       }
@@ -281,6 +288,8 @@ export default function SearchPage() {
             </div>
           ))}
         </div> */}
+
+        <TripsFilter filters={preferenceOptions} />
 
         {/* Submit Button */}
 

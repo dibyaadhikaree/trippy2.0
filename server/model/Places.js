@@ -5,7 +5,7 @@ const placesSchema = new mongoose.Schema(
     _id: { type: String, required: true }, // Set _id explicitly
     name: String,
     description: String,
-    img: String,
+    img: [String],
     latitude: Number,
     longitude: Number,
     categories: [String],

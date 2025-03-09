@@ -113,6 +113,8 @@ export async function createUser(user) {
 
 export async function updateUserPreference(user, data, path) {
   try {
+    console.log("UPDATING USER PREF FOR", user, data);
+
     const response = await fetch(baseUrl + "users/" + user, {
       method: "PATCH",
       headers: {
@@ -123,18 +125,9 @@ export async function updateUserPreference(user, data, path) {
 
     const updated = await response.json();
 
-    console.log(updated, "updating wiht", data, path);
     if (path) {
       revalidatePath("/places/" + path);
     }
-
-    const res = await fetch("http://localhost:5000/refresh", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({}),
-    });
 
     return updated;
   } catch (err) {
@@ -173,6 +166,16 @@ export async function createReview(id, formData) {
 
   revalidatePath("/places/" + id);
   revalidatePath("/account/likedPlaces");
+
+  const resp = await fetch("http://localhost:5000/refresh", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      reviews: true,
+    }),
+  });
 
   return data;
 }

@@ -15,11 +15,13 @@ const Places = require("../model/Places");
 exports.getAllPlaces = catchAsync(async (req, res, next) => {
   //Add filters on getAllPlaces
 
-  const { city, categories } = req.query;
+  const { city, preferences: categories } = req.query;
 
   // Convert query parameters to arrays if they exist
   // const cityArray = cities ? cities.split(",") : [];
-  const categoryArray = categories ? categories.split(",") : [];
+
+  const categoryArray =
+    categories != null && categories ? categories.split(",") : [];
 
   // Build the aggregation pipeline
   const pipeline = [];
