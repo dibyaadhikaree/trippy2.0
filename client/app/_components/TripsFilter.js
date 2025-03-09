@@ -70,17 +70,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 // export default Filter;
 // import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
-function Filter({ user }) {
-  const filters = [
-    "Historical and Cultural Sites",
-    "Religious Sites",
-    "Natural Attractions",
-    "Parks and Gardens",
-    "Entertainment and Leisure",
-    "Food and Shopping",
-    "Landmarks and Viewpoints",
-  ];
-
+function Filter({ filters }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -113,7 +103,7 @@ function Filter({ user }) {
   };
 
   return (
-    <div className="flex mb-7">
+    <div className=" grid grid-cols-5 m-7">
       {filters.map((filter) => (
         <Button
           key={filter}
@@ -131,7 +121,7 @@ function Filter({ user }) {
 function Button({ filter, handleFilterChange, activeFilters, children }) {
   return (
     <button
-      className={`px-5 py-2 hover:bg-primary-700 border-2 border-primary-600 m-2 ${
+      className={`px-3 py-1 hover:bg-primary-700 border-2 border-primary-600 m-2 ${
         activeFilters.includes(filter) ? "bg-primary-600" : ""
       }`}
       onClick={() => handleFilterChange(filter)}

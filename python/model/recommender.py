@@ -34,6 +34,7 @@ class Recommender:
             user = users.get(user_id)
             
             if not user or not user.get('preferences'):
+                print("no user")
                 return []
 
             if self.cat_matrix is None:

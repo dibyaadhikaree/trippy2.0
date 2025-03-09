@@ -31,9 +31,17 @@ exports.getAllUsers = async (req, res, next) => {
       continue;
     }
 
+    console.log(user);
+
     const matchedCategories = await CategoryModel.find({
       name: { $in: user.preferences },
     }).select("subcategories");
+
+    console.log(
+      user,
+      "ko pref is ",
+      matchedCategories.flatMap((cat) => cat.subcategories)
+    );
     user.preferences = matchedCategories.flatMap((cat) => cat.subcategories);
   }
 
@@ -64,6 +72,16 @@ exports.setUserPreferences = async (req, res, next) => {
     console.log("Updating user id and data", id, data);
 
     const updatedPref = await User.findByIdAndUpdate(id, data);
+
+    // const respp = await fetch("http://localhost:5000/refresh", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     users: true,
+    //   }),
+    // });
 
     res.status(200).json({
       data: updatedPref,
