@@ -73,7 +73,7 @@ export default async function Review({ reviews }) {
       ) : (
         ""
       )}
-      <h1>Data's Reviews</h1>
+      <h1 className="text-lg">Reviews</h1>
       {otherReviews.map((review) => (
         <div
           className="flex flex-col border-[1px] px-3 py-4 border-primary-700 "

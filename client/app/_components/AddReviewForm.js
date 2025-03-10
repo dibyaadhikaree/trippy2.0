@@ -59,7 +59,7 @@ export function AddReviewForm({ placeId }) {
       </div>
 
       <div className="flex justify-end items-center my-6 ">
-        <Button buttonname="Update Now" updating={"Adding your Review"} />
+        <Button buttonname="Done" updating={"Adding your Review"} />
       </div>
     </form>
   );
