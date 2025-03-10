@@ -29,6 +29,16 @@ class CollaborativeFilter:
 
     def _process_users(self, users):
         """Process user data into internal structures"""
+        # First pass: collect all liked places
+        all_liked = set()
+        for user in users:
+            liked_places = set(map(str, user.get('likedPlaces', [])))
+            all_liked.update(liked_places)
+        
+        # Build complete place_users index
+        self.place_users = {pid: set() for pid in all_liked}
+        
+        # Second pass: process users with complete place set
         for user in users:
             user_id = str(user.get('_id'))
             liked_places = set(map(str, user.get('likedPlaces', [])))
@@ -40,15 +50,20 @@ class CollaborativeFilter:
             for pid in liked_places:
                 self.place_users[pid].add(user_id)
             
-            # Create user vector
+            # Create user vector with stable dimension
             self.user_matrix[user_id] = self._create_user_vector(liked_places)
 
     def _create_user_vector(self, liked_places):
         """Create a normalized vector representing user preferences"""
+        if not self.place_users:
+            return np.array([])  # Return empty array if no places
+        
         vector = np.zeros(len(self.place_users))
         for idx, pid in enumerate(self.place_users):
             vector[idx] = 1 if pid in liked_places else 0
-        return vector / np.linalg.norm(vector) if np.linalg.norm(vector) > 0 else vector
+        
+        norm = np.linalg.norm(vector)
+        return vector / norm if norm > 0 else vector
 
     def _compute_similarities(self):
         """Calculate cosine similarity between users"""
@@ -58,6 +73,15 @@ class CollaborativeFilter:
                 uid1 = user_ids[i]
                 uid2 = user_ids[j]
                 
+                # Skip users with empty vectors
+                if len(self.user_matrix[uid1]) == 0 or len(self.user_matrix[uid2]) == 0:
+                    continue
+                    
+                # Verify vector dimensions match
+                if len(self.user_matrix[uid1]) != len(self.user_matrix[uid2]):
+                    logger.error(f"Vector dimension mismatch between {uid1} and {uid2}")
+                    continue
+                    
                 # Calculate cosine similarity
                 similarity = np.dot(
                     self.user_matrix[uid1],

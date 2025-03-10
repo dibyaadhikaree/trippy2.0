@@ -28,10 +28,7 @@ class Refresher:
                 
                 for review in place.get('reviews', []):
                     if 'sentiment_score' not in review or review['sentiment_score'] is None:
-                        review['sentiment_score'] = self.sentiment.analyze_sentiment(
-                            review.get('text', ''), 
-                            review.get('timestamp')
-                        )
+                        review['sentiment_score'] = self.sentiment.analyze_sentiment([review])
                         needs_update = True
                     
                     if isinstance(review.get('sentiment_score'), (int, float)):
