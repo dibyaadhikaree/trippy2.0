@@ -1,37 +1,36 @@
 import logging
+from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
 class UserManager:
     def __init__(self):
-        self.place_cats = {}
+        self.place_categories = defaultdict(list)
 
     def update_preferences(self, users, places):
         try:
-            logger.info("Updating user preferences from liked places")
-            self.place_cats = {p['_id']: p.get('categories', []) for p in places}
+            logger.info("Updating preferences for %d users", len(users))
+            place_map = {str(p['_id']): p.get('categories', []) for p in places}
             updated_users = []
             
             for user in users:
-                user_id = user.get('_id')
-                liked_places = user.get('likedPlaces', [])
+                if not isinstance(user, dict) or '_id' not in user:
+                    continue
                 
-                # Extract categories from ALL liked places
-                categories = set()
+                liked_places = [str(pid) for pid in user.get('likedPlaces', [])]
+                if not liked_places:
+                    continue
+                
+                new_prefs = set()
                 for pid in liked_places:
-                    categories.update(self.place_cats.get(pid, []))
+                    new_prefs.update(place_map.get(pid, []))
                 
-                new_prefs = list(categories)
-                current_prefs = user.get('preferences', [])
-                
-                # Always update preferences if user has liked places
-                if liked_places and new_prefs != current_prefs:
-                    user['preferences'] = new_prefs
+                current_prefs = set(map(str, user.get('preferences', [])))
+                if new_prefs != current_prefs:
+                    user['preferences'] = list(new_prefs)
                     updated_users.append(user)
-                    logger.debug(f"Updated preferences for {user_id}: {new_prefs}")
-
-            return updated_users
             
+            return list(updated_users)
         except Exception as e:
-            logger.error(f"Preference update failed: {str(e)}")
+            logger.error(f"Preference update failed: {str(e)}", exc_info=True)
             return []

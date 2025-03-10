@@ -17,7 +17,6 @@ class Refresher:
         self.processed_places = defaultdict(list)
 
     def process_reviews(self, places):
-        """Calculate missing sentiment scores and update places"""
         try:
             logger.info("Processing reviews for %d places", len(places))
             updated_places = []
@@ -29,11 +28,10 @@ class Refresher:
                 
                 for review in place.get('reviews', []):
                     if 'sentiment_score' not in review or review['sentiment_score'] is None:
-                        score = self.sentiment.analyze_sentiment(
+                        review['sentiment_score'] = self.sentiment.analyze_sentiment(
                             review.get('text', ''), 
                             review.get('timestamp')
                         )
-                        review['sentiment_score'] = score
                         needs_update = True
                     
                     if isinstance(review.get('sentiment_score'), (int, float)):
@@ -62,45 +60,35 @@ class Refresher:
             return places
 
     def refresh(self, users_changed, places_changed, reviews_changed):
-        """Main refresh entry point with full error handling"""
         try:
             logger.info(
-                "Starting refresh - Users: %s, Places: %s, Reviews: %s", users_changed, places_changed, reviews_changed)
+                "Starting refresh - Users: %s, Places: %s, Reviews: %s",
+                users_changed, places_changed, reviews_changed
+            )
             
-            # Always load fresh places first
-            places = self.loader.load_places(force_reload=places_changed or reviews_changed or users_changed)
+            self.loader.invalidate_cache()
+            places = self.loader.load_places(force_reload=True)
+            users = self.loader.load_users(force_reload=True)
 
-            # Process reviews FIRST to ensure sentiment scores are current
             if reviews_changed or places_changed:
-                logger.debug("Processing reviews and places")
                 places = self.process_reviews(places)
-                self.recommender.build_matrix(places)
+            
+            self.recommender.build_matrix(places)
+            self.recommender.collab.build(users)
 
-            # Process users AFTER places to ensure category data exists
             if users_changed:
-                logger.debug("Processing user changes")
-                users = self.loader.load_users(force_reload=True)
                 updated_users = self.users.update_preferences(users, places)
-                
-                # Persist updated preferences to backend
                 for user in updated_users:
                     try:
                         response = requests.patch(
                             f"{self.loader.users_url}/{user['_id']}",
-                            json={"preferences": user['preferences']},
+                            json={'preferences': user['preferences']},
                             timeout=3
                         )
                         if response.status_code != 200:
-                            logger.warning(f"Failed to save preferences for {user['_id']}")
+                            logger.warning(f"Failed to update {user['_id']}")
                     except Exception as e:
-                        logger.error(f"User preference save failed: {str(e)}")
-
-                # Rebuild collaborative model with FRESH data
-                users = self.loader.load_users(force_reload=True)  # Reload after updates
-                self.recommender.collab.build(users)
-                
-                # Invalidate recommendation cache
-                self.recommender.last_user_reload = None
+                        logger.error(f"User update failed: {str(e)}")
 
             logger.info("Refresh completed successfully")
             return True

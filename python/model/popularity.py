@@ -10,19 +10,20 @@ class Popularity:
     def calculate(self, top_n=10):
         try:
             logger.info("Calculating popular places")
-            places = self.loader.load_places()
+            places = self.loader.load_places(force_reload=True)
             
             if not places:
                 return []
 
             like_counts = [p.get('like_count', 0) for p in places]
-            max_likes = max(like_counts) if like_counts and max(like_counts) > 0 else 1
+            max_likes = max(like_counts) if like_counts else 1
+            max_likes = max(max_likes, 1)
 
             scores = []
             for place in places:
                 likes = place.get('like_count', 0)
                 sentiment = place.get('sentiment_avg', 0)
-                rate = place.get('rate', 0)
+                rate = min(max(place.get('rate', 0), 0), 5)
                 
                 normalized_likes = likes / max_likes
                 normalized_rate = rate / 5
@@ -31,5 +32,5 @@ class Popularity:
             
             return [pid for pid, _ in sorted(scores, key=lambda x: -x[1])[:top_n]]
         except Exception as e:
-            logger.error(f"Popularity calculation failed: {str(e)}")
+            logger.error(f"Popularity calculation failed: {str(e)}", exc_info=True)
             return []

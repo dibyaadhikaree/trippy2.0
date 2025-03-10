@@ -1,5 +1,6 @@
 import numpy as np
 import logging
+import time
 from collections import defaultdict
 from sklearn.preprocessing import MultiLabelBinarizer
 from .data_loader import DataLoader
@@ -16,78 +17,72 @@ class Recommender:
         self.places = []
         self.cat_matrix = None
         self.collab = CollaborativeFilter()
+        self.last_rebuild = 0
 
     def build_matrix(self, places):
         try:
-            logger.info("Building category matrix")
-            valid_places = [p for p in places if 'categories' in p]
+            logger.info("Rebuilding category matrix")
+            valid_places = [p for p in places if p.get('categories')]
             self.places = valid_places
-            self.cat_matrix = self.mlb.fit_transform([p['categories'] for p in valid_places])
+            self.mlb.fit([p['categories'] for p in valid_places])
+            self.cat_matrix = self.mlb.transform([p['categories'] for p in valid_places])
+            self.last_rebuild = time.time()
         except Exception as e:
             logger.error(f"Matrix build failed: {str(e)}")
             self.cat_matrix = None
 
     def recommend(self, user_id, top_n=10):
         try:
-            logger.info(f"Generating recommendations for user {user_id}")
-            users = {u['_id']: u for u in self.loader.load_users()}
-            user = users.get(user_id)
+            users = self.loader.load_users(force_reload=True)
+            places = self.loader.load_places(force_reload=True)
+            user = next((u for u in users if str(u.get('_id')) == str(user_id)), None)
             
-            # Fallback for invalid users or empty preferences
-            if not user or not user.get('preferences'):
-                if user.get('likedPlaces'):
-                    logger.info("Generating initial preferences from liked places")
-                    self.manager.update_preferences([user], self.loader.load_places())
-                    user = next(u for u in users if u['_id'] == user_id)
-                else:
-                    return []
+            if user is None:
+                logger.warning(f"User {user_id} not found")
+                return []
 
-            # Build category matrix if missing
-            if self.cat_matrix is None:
-                self.build_matrix(self.loader.load_places())
+            updated_users = self.manager.update_preferences([user], places)
+            if bool(updated_users):
+                user = updated_users[0]
 
-            # Get user's liked places for filtering
-            user_liked = set(user.get('likedPlaces', []))
-            
-            # Content-based scoring
+            if self.cat_matrix is None or (time.time() - self.last_rebuild > 3600):
+                self.build_matrix(places)
+
             user_prefs = user.get('preferences', [])
-            user_vec = self.mlb.transform([user_prefs])[0]
-            scores = self.cat_matrix.dot(user_vec)
+            user_liked = set(map(str, user.get('likedPlaces', [])))
             
-            # Collaborative filtering scoring
+            if user_prefs and self.cat_matrix is not None:
+                user_vec = self.mlb.transform([user_prefs])[0]
+            else:
+                user_vec = np.zeros(self.cat_matrix.shape[1]) if self.cat_matrix is not None else np.array([])
+
+            content_scores = self.cat_matrix.dot(user_vec) if self.cat_matrix is not None else np.zeros(len(places))
+            
             collab_scores = defaultdict(float)
-            if user_id in self.collab.user_similarities:
-                for similar_user, similarity in self.collab.user_similarities[user_id].items():
-                    liked_places = users.get(similar_user, {}).get('likedPlaces', [])
-                    for pid in liked_places:
-                        if pid not in user_liked:  # Filter upfront
+            if str(user_id) in self.collab.user_similarities:
+                for similar_user, similarity in self.collab.user_similarities[str(user_id)].items():
+                    for pid in self.collab.user_likes.get(str(similar_user), []):
+                        if pid not in user_liked:
                             collab_scores[pid] += similarity
 
-            # Hybrid scoring with sentiment integration
             results = []
             for idx, place in enumerate(self.places):
-                pid = place['_id']
-                
-                # Skip already-liked places
+                pid = str(place['_id'])
                 if pid in user_liked:
                     continue
-                
-                # Content-based components
-                category_score = scores[idx] / len(user_prefs) if user_prefs else 0
+
+                category_score = content_scores[idx] / len(user_prefs) if user_prefs else 0
                 sentiment_score = place.get('sentiment_avg', 0)
-                rate_score = min(max(place.get('rate', 0), 0), 5) / 5
-                
-                # Collaborative component
+                rate_score = place.get('rate', 0) / 5
                 collaborative_score = collab_scores.get(pid, 0)
-                
-                # Final weighted score
-                total = 0.6 * (0.6 * category_score + 0.3 * sentiment_score + 0.1 * rate_score) + 0.4 * collaborative_score
-                
+
+                total = (0.6 * (0.6 * category_score + 0.3 * sentiment_score + 0.1 * rate_score)
+                        + 0.4 * collaborative_score)
                 results.append((pid, total))
-            
-            # Return top N after sorting
-            return [pid for pid, _ in sorted(results, key=lambda x: -x[1])[:top_n]]
+
+            filtered = [(pid, score) for pid, score in results if pid not in user_liked]
+            return [pid for pid, _ in sorted(filtered, key=lambda x: -x[1])[:top_n]]
         
         except Exception as e:
-            logger.error(f"Recommendation failed: {str(e)}")
+            logger.error(f"Recommendation failed: {str(e)}", exc_info=True)
             return []
