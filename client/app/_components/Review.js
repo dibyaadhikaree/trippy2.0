@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authConfig } from "../_services/auth";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { deleteReview } from "../_services/data-services";
+import { revalidatePath } from "next/cache";
 
 export default async function Review({ reviews }) {
   const session = await getServerSession(authConfig);
@@ -58,7 +59,8 @@ export default async function Review({ reviews }) {
                 className=""
                 action={async () => {
                   "use server";
-                  deleteReview(review._id);
+                  deleteReview(review._id, review.place);
+                  revalidatePath("places/" + review.place);
                 }}
               >
                 <button className="hover:text-red-500  justify-end items-center mx-auto">

@@ -129,6 +129,19 @@ export async function updateUserPreference(user, data, path) {
       revalidatePath("/places/" + path);
     }
 
+    //referesh the data
+    const resp = await fetch(+"http://localhost:2000/refresh", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        reviews: true,
+        users: true,
+        places: true,
+      }),
+    });
+
     return updated;
   } catch (err) {
     console.log(err);
@@ -183,17 +196,29 @@ export async function createReview(id, formData) {
     },
     body: JSON.stringify({
       reviews: true,
+      places: true,
     }),
   });
 
   return data;
 }
-export async function deleteReview(id) {
+export async function deleteReview(id, path) {
   const res = await fetch(baseUrl + `reviews/${id}`, {
     method: "DELETE",
   });
 
-  return data;
+  const resp = await fetch("http://localhost:5000/refresh", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      reviews: true,
+      places: true,
+    }),
+  });
+
+  return null;
 }
 
 export async function getHeadDestinations() {
