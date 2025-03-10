@@ -6,10 +6,10 @@ logger = logging.getLogger(__name__)
 
 class CollaborativeFilter:
     def __init__(self):
-        self.user_similarities = defaultdict(dict)  # {user_id: {similar_user: similarity}}
-        self.user_likes = defaultdict(set)          # {user_id: set(liked_place_ids)}
-        self.place_users = defaultdict(set)        # {place_id: set(user_ids)}
-        self.user_matrix = {}                      # {user_id: vector}
+        self.user_similarities = defaultdict(dict)  
+        self.user_likes = defaultdict(set)         
+        self.place_users = defaultdict(set)     
+        self.user_matrix = {}                 
 
     def build(self, users):
         try:
