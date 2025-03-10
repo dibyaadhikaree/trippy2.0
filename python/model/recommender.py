@@ -47,6 +47,7 @@ class Recommender:
 
             if self.cat_matrix is None or (time.time() - self.last_rebuild > 3600):
                 self.build_matrix(places)
+                self.collab.build(updated_users)
 
             user_prefs = user.get('preferences', [])
             user_liked = set(map(str, user.get('likedPlaces', [])))
@@ -73,14 +74,13 @@ class Recommender:
                     continue
 
                 category_score = content_scores[idx] / len(user_prefs) if user_prefs else 0
-                sentiment_score = place.get('sentiment_avg', 0)
-                rate_score = place.get('rate', 0) / 5
+                sentiment_score = place['sentiment_avg'] if place['sentiment_avg'] else 0
+                rate_score = min(max(place['rate'] if place['rate'] else 0, 5), 0) / 5
                 collaborative_score = collab_scores.get(pid, 0)
 
                 total = (0.6 * (0.6 * category_score + 0.3 * sentiment_score + 0.1 * rate_score)
                         + 0.4 * collaborative_score)
                 results.append((pid, total))
-            print(" a: ", category_score, " b: ", sentiment_score, " c: ", rate_score, " d: ", collaborative_score)
 
             filtered = [(pid, score) for pid, score in results if pid not in user_liked]
             return [pid for pid, _ in sorted(filtered, key=lambda x: -x[1])[:top_n]]

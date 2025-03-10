@@ -84,7 +84,7 @@ class CollaborativeFilter:
         """Generate collaborative recommendations"""
         user_id = str(user_id)
         if user_id not in self.user_similarities:
-            return []
+            return {}
 
         recommendations = defaultdict(float)
         liked_places = self.user_likes[user_id] if exclude_liked else set()
