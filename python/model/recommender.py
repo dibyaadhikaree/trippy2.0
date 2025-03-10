@@ -57,13 +57,14 @@ class Recommender:
                 user_vec = np.zeros(self.cat_matrix.shape[1]) if self.cat_matrix is not None else np.array([])
 
             content_scores = self.cat_matrix.dot(user_vec) if self.cat_matrix is not None else np.zeros(len(places))
-            
+
             collab_scores = defaultdict(float)
             if str(user_id) in self.collab.user_similarities:
                 for similar_user, similarity in self.collab.user_similarities[str(user_id)].items():
                     for pid in self.collab.user_likes.get(str(similar_user), []):
                         if pid not in user_liked:
                             collab_scores[pid] += similarity
+            collab_scores = self.collab.get_recommendations(user_id, exclude_liked=True)
 
             results = []
             for idx, place in enumerate(self.places):
@@ -79,6 +80,7 @@ class Recommender:
                 total = (0.6 * (0.6 * category_score + 0.3 * sentiment_score + 0.1 * rate_score)
                         + 0.4 * collaborative_score)
                 results.append((pid, total))
+            print(" a: ", category_score, " b: ", sentiment_score, " c: ", rate_score, " d: ", collaborative_score)
 
             filtered = [(pid, score) for pid, score in results if pid not in user_liked]
             return [pid for pid, _ in sorted(filtered, key=lambda x: -x[1])[:top_n]]
