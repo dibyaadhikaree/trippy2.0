@@ -26,15 +26,13 @@ exports.getAllUsers = async (req, res, next) => {
 
   // Compute mappedPreferences dynamically
   for (const user of users) {
-    if (!user.preferences || user.preferences.length === 0) {
+    if (!user.selectedPreferences || user.selectedPreferences.length === 0) {
       user.preferences = [];
       continue;
     }
 
-    console.log(user);
-
     const matchedCategories = await CategoryModel.find({
-      name: { $in: user.preferences },
+      name: { $in: user.selectedPreferences },
     }).select("subcategories");
 
     console.log(

@@ -8,7 +8,7 @@ function UpdatePreferences({ user, categories }) {
   const filters = categories.map((cat) => cat.name);
 
   const [selectedPreferences, setSelectedPreferences] = useState(
-    user.preferences ?? []
+    user.selectedPreferences ?? []
   );
 
   console.log(user.preferences, "user pref now ");
@@ -29,7 +29,7 @@ function UpdatePreferences({ user, categories }) {
     }
 
     const data = await updateUserPreference(user.userId, {
-      preferences: selectedPreferences,
+      selectedPreferences,
     });
 
     // const params = new URLSearchParams();
