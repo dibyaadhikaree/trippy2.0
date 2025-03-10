@@ -1,11 +1,16 @@
+import PlacesList from "@/app/_components/PlacesList";
+import { authConfig } from "@/app/_services/auth";
+import { getLikedPlaces } from "@/app/_services/data-services";
+import { getServerSession } from "next-auth";
+
 export const metadata = {
   title: "Profile",
 };
 
 export default async function Page() {
-  // const session = await auth();
+  const session = await getServerSession(authConfig);
 
-  // const guest = await getUserFromEmail(session.user.email);
+  const likedPlaces = await getLikedPlaces(session.user.userId);
 
   return (
     <div>
@@ -13,16 +18,7 @@ export default async function Page() {
         Your Liked Places
       </h2>
 
-      <p className="text-lg mb-8 text-primary-200">See you soon!</p>
-
-      {/* <UpdateProfileForm guest={guest}>
-        <SelectCountry
-          name="nationality"
-          id="nationality"
-          className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
-          defaultCountry={guest.nationality}
-        />
-      </UpdateProfileForm> */}
+      <PlacesList places={likedPlaces} />
     </div>
   );
 }

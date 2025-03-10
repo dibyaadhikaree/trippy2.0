@@ -9,6 +9,9 @@ import {
   MapPinIcon,
   UsersIcon,
 } from "@heroicons/react/24/solid";
+import ImageSlider from "./ImageSlider";
+
+// import BackButton from "@/app/_components/BackButton";
 
 // {
 //   "xid": "W193705372",
@@ -42,14 +45,17 @@ function PlaceCard({ place }) {
 
   return (
     <div className="flex border-primary-800 border">
+      {/* <BackButton></BackButton> */}
+
       <div className="flex-1 relative w-full ">
-        <Image
+        {/* <Image
           src={image == "not found" ? bgImage : image}
           // src={bgImage}
           fill
           className="object-cover object-top"
           alt="Mountains and forests with two cabins"
-        />
+        /> */}
+        <ImageSlider images={place.img} />
       </div>
       <div className="flex-grow">
         <div className="pt-5 pb-4 px-7 bg-primary-950">

@@ -1,5 +1,6 @@
 const catchAsync = require("../utils/catchAsyncErrors");
 const Places = require("../model/Places");
+const User = require("../model/UsersModel");
 
 // exports.getAllPlaces = catchAsync(async (req, res, next) => {
 //   //Add filters on getAllPlaces
@@ -106,6 +107,23 @@ exports.getForYou = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: forYouPlaces,
+  });
+});
+
+exports.getLikedPlaces = catchAsync(async (req, res, next) => {
+  //fetch popular places from the model
+
+  const { userId } = req.params;
+
+  const user = await User.findById(userId);
+
+  const liked = await Places.find({
+    _id: { $in: user.likedPlaces },
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: liked,
   });
 });
 

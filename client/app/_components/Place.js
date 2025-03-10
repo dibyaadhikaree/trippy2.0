@@ -12,6 +12,8 @@ import {
 import bgImage from "../../public/bg.png";
 import React, { useState } from "react";
 import { updateUserPreference } from "../_services/data-services";
+import BackButton from "@/app/_components/BackButton";
+import ImageSlider from "./ImageSlider";
 
 function capitalizeFirstLetter(val) {
   return String(val).charAt(0).toUpperCase() + String(val).slice(1);
@@ -51,54 +53,58 @@ function Place({ place, user }) {
   };
 
   return (
-    <div className="grid grid-cols-[3fr_4fr] gap-20 border border-primary-800 py-3 px-10 mb-24 relative ">
-      <div className="relative scale-[1.15] -translate-x-3  ">
-        {/* <Image
+    <>
+      <BackButton />
+      <div className="grid grid-cols-[3fr_4fr] gap-20 border border-primary-800 py-3 px-10 mb-24 relative ">
+        <div className="relative scale-[1.15] -translate-x-3  ">
+          {/* <Image
           src={image == "not found" ? bgImage : image}
           alt={`Place ${name}`}
           fill
           className="object-cover"
         /> */}
-        <Image
-          src={bgImage}
-          alt={`Place ${name}`}
-          fill
-          className="object-cover"
-        />
-      </div>
+          {/* <Image
+            src={bgImage}
+            alt={`Place ${name}`}
+            fill
+            className="object-cover"
+          /> */}
+          <ImageSlider images={place.img} />
+        </div>
 
-      <div>
-        <h3 className="flex justify-between text-accent-100 font-black text-7xl mb-5 translate-x-[-254px] bg-primary-950 p-6 pb-1 w-[150%]">
-          {capitalizeFirstLetter(name)}
+        <div>
+          <h3 className="flex justify-between text-accent-100 font-black text-7xl mb-5 translate-x-[-254px] bg-primary-950 p-6 pb-1 w-[150%]">
+            {capitalizeFirstLetter(name)}
 
-          <button
-            onClick={toggleLike}
-            className="text-red-500 top-[0px] absolute right-[-10px] mx-4"
-          >
-            {liked ? (
-              <HeartIcon className="h-12 w-12  text-red-700" />
-            ) : (
-              <HeartIcon className="h-12 w-12 text-primary-700 outline-1 hover:text-red-700" />
-            )}
-          </button>
-        </h3>
+            <button
+              onClick={toggleLike}
+              className="text-red-500 top-[0px] absolute right-[-10px] mx-4"
+            >
+              {liked ? (
+                <HeartIcon className="h-12 w-12  text-red-700" />
+              ) : (
+                <HeartIcon className="h-12 w-12 text-primary-700 outline-1 hover:text-red-700" />
+              )}
+            </button>
+          </h3>
 
-        <p className="text-lg text-primary-300 mb-10">
-          <TextExpander>{description}</TextExpander>
-        </p>
+          <p className="text-lg text-primary-300 mb-10">
+            <TextExpander>{description}</TextExpander>
+          </p>
 
-        <ul className="flex flex-col gap-4 mb-7">
-          <li className="flex gap-3 items-center ">
-            <MapPinIcon className="h-5 w-5 text-primary-600" />
-            <span className="text-lg">{capitalizeFirstLetter(city)}</span>
-          </li>
-          {/* <li className="flex gap-3 items-center">
+          <ul className="flex flex-col gap-4 mb-7">
+            <li className="flex gap-3 items-center ">
+              <MapPinIcon className="h-5 w-5 text-primary-600" />
+              <span className="text-lg">{capitalizeFirstLetter(city)}</span>
+            </li>
+            {/* <li className="flex gap-3 items-center">
             <CodeBracketIcon className="h-5 w-5 text-primary-600" />
             <span className="text-lg">{"12km"}</span>
           </li> */}
-        </ul>
+          </ul>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

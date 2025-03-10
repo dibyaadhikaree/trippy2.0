@@ -13,6 +13,7 @@ router.route("/").get(placesController.getAllPlaces);
 router.route("/popularPlaces").get(placesController.getPopularPlaces);
 
 router.route("/forYou").post(placesController.getForYou);
+router.route("/likedPlaces/:userId").get(placesController.getLikedPlaces);
 
 router.route("/:id").get(placesController.getPlaceById);
 

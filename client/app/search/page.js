@@ -211,7 +211,7 @@ export default function SearchPage() {
       // Construct the query parameters
       const queryParams = new URLSearchParams({
         city: location, // Send the headDestination._id
-        preferences: searchParams.get("preferences") ?? "", // Convert array to comma-separated string
+        // preferences: searchParams.get("preferences") ?? "", // Convert array to comma-separated string
       });
 
       // Fetch data from the backend
@@ -289,7 +289,7 @@ export default function SearchPage() {
           ))}
         </div> */}
 
-        <TripsFilter filters={preferenceOptions} />
+        {/* <TripsFilter filters={preferenceOptions} /> */}
 
         {/* Submit Button */}
 

@@ -144,6 +144,15 @@ export async function getPlaceById(id) {
 
   return data;
 }
+export async function getLikedPlaces(user) {
+  const res = await fetch(baseUrl + `places/likedPlaces/${user}`, {
+    method: "GET",
+  });
+
+  const data = await res.json();
+
+  return data.data;
+}
 
 export async function getReviewsForPlace(id) {
   const res = await fetch(baseUrl + `places/${id}/reviews`, {
