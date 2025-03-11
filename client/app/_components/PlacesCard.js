@@ -55,7 +55,7 @@ function PlaceCard({ place }) {
           className="object-cover object-top"
           alt="Mountains and forests with two cabins"
         /> */}
-        <ImageSlider images={place.img} />
+        <ImageSlider images={place.img} frontPage={true} />
       </div>
       <div className="flex-grow">
         <div className="pt-5 pb-4 px-7 bg-primary-950">

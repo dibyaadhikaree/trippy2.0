@@ -81,9 +81,9 @@ function Place({ place, user }) {
               className="text-red-500 top-[0px] absolute right-[-10px] mx-4"
             >
               {liked ? (
-                <HeartIcon className="h-12 w-12  text-red-700" />
+                <HeartIcon className="h-12 w-12  text-like-100" />
               ) : (
-                <HeartIcon className="h-12 w-12 text-primary-700 outline-1 hover:text-red-700" />
+                <HeartIcon className="h-12 w-12 text-primary-700 outline-1 hover:text-like-100" />
               )}
             </button>
           </h3>

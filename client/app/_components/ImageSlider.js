@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const ImageSlider = ({ images }) => {
+const ImageSlider = ({ images, frontPage = false }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const prevSlide = () => {
@@ -28,28 +28,32 @@ const ImageSlider = ({ images }) => {
           alt={`Slide ${currentIndex + 1}`}
           layout="fill"
           objectFit="cover"
-          className="rounded-2xl object-cover object-top"
+          className="rounded-2xl"
         />
       </div>
-
+      {frontPage ? (
+        <></>
+      ) : (
+        <>
+          <button
+            onClick={prevSlide}
+            className="absolute left-4 top-[90%] -translate-y-1/2 bg-black/50 p-2 rounded-full text-white hover:bg-black/70"
+          >
+            <ChevronLeft size={24} />
+          </button>
+          {/* Next Button */}
+          <button
+            onClick={nextSlide}
+            className="absolute right-4 top-[90%] -translate-y-1/2 bg-black/50 p-2 rounded-full text-white hover:bg-black/70"
+          >
+            <ChevronRight size={24} />
+          </button>
+        </>
+      )}
       {/* Previous Button */}
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 p-2 rounded-full text-white hover:bg-black/70"
-      >
-        <ChevronLeft size={24} />
-      </button>
-
-      {/* Next Button */}
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 p-2 rounded-full text-white hover:bg-black/70"
-      >
-        <ChevronRight size={24} />
-      </button>
 
       {/* Indicators */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+      {/* <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
         {images.map((_, index) => (
           <div
             key={index}
@@ -58,7 +62,7 @@ const ImageSlider = ({ images }) => {
             }`}
           ></div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };
