@@ -96,7 +96,7 @@ class CollaborativeFilter:
         """Get most similar users"""
         user_id = str(user_id)
         if user_id not in self.user_similarities:
-            return []
+            return {}
             
         similar = sorted(
             self.user_similarities[user_id].items(),

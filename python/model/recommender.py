@@ -75,7 +75,7 @@ class Recommender:
 
                 category_score = content_scores[idx] / len(user_prefs) if user_prefs else 0
                 sentiment_score = place['sentiment_avg'] if place['sentiment_avg'] else 0
-                rate_score = min(max(place['rate'] if place['rate'] else 0, 5), 0) / 5
+                rate_score = min(max(place['rate'] if place['rate'] else 0, 0), 5) / 5
                 collaborative_score = collab_scores.get(pid, 0)
 
                 total = (0.6 * (0.6 * category_score + 0.3 * sentiment_score + 0.1 * rate_score)
