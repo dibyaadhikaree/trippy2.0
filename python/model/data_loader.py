@@ -22,7 +22,7 @@ class DataLoader:
         try:
             if force_reload or not self._cached_users:
                 logger.info("Loading fresh users data")
-                response = requests.get(self.users_url, timeout=10)
+                response = requests.get(self.users_url, timeout=100)
                 response.raise_for_status()
                 self._cached_users = response.json().get('data', [])
                 self._update_place_likes()
@@ -35,7 +35,7 @@ class DataLoader:
         try:
             if force_reload or not self._cached_places:
                 logger.info("Loading fresh places data")
-                response = requests.get(self.places_url, timeout=10)
+                response = requests.get(self.places_url, timeout=100)
                 response.raise_for_status()
                 self._cached_places = response.json().get('data', [])
                 self._enhance_places_data()
